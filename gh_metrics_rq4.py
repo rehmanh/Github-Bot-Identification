@@ -9,26 +9,26 @@ import re
 confirmed_bots = [
     "VSCodeTriageBot",
     "dependabot",
-    "github-actions[bot]",
+    "github-actions",
     "check-spelling-bot",
-    "azure-pipelines[bot]",
-    "microsoft-github-policy-service[bot]",
+    "azure-pipelines",
+    "microsoft-github-policy-service",
     "typescript-bot",
-    "github-pages[bot]",
-    "kodiakhq[bot]",
-    "renovate[bot]",
-    "bors[bot]",
-    "microsoft-cla-retired[bot]",
-    "msftbot[bot]",
+    "github-pages",
+    "kodiakhq",
+    "renovate",
+    "bors",
+    "microsoft-cla-retired",
+    "msftbot",
     "facebook-github-bot",
-    "review-notebook-app[bot]",
+    "review-notebook-app",
     "codecov-commenter",
-    "codesandbox-ci[bot]",
+    "codesandbox-ci",
     "msft-fluent-ui-bot",
     "fabricteam",
-    "size-auditor[bot]",
-    "github-code-scanning[bot]",
-    "github-merge-queue[bot]",
+    "size-auditor",
+    "github-code-scanning",
+    "github-merge-queue",
     "pull[bot]",
     "PylanceBot",
     "coveralls",
@@ -37,18 +37,18 @@ confirmed_bots = [
     "apecloud-bot",
     "dotnet-winget-bot",
     "Rust-Winget-Bot",
-    "dotnet-maestro[bot]",
+    "dotnet-maestro",
     "msfluid-bot",
     "CBL-Mariner-Bot",
-    "reunion-maestro[bot]",
+    "reunion-maestro",
     "pull-bot",
     "analysis-bot",
     "AppVeyorBot",
-    "sonarcloud[bot]",
-    "codecov[bot]",
+    "sonarcloud",
+    "codecov",
     "BrewTestBot",
     "acrolinxatmsft1",
-    "changeset-bot[bot]",
+    "changeset-bot",
     "msftclas",
     "playwrightmachine",
     "PrismAutomata",
@@ -81,9 +81,6 @@ if __name__ == '__main__':
     timezone = pytz.timezone("Etc/Greenwich")
 
     for index, row in prs.iterrows():
-        if index == 50:
-            break
-
         if gh.rate_limiting[0] < 5:
             print("SLEEPING TO AVOID RATE LIMIT")
             time.sleep(3600)
@@ -124,6 +121,9 @@ if __name__ == '__main__':
                 user = re.findall('"([^"]*)"', u)
                 u = user[0]
 
+            if u.endswith('[bot]'):
+                u = u.removesuffix('[bot]')
+
             if u in confirmed_bots:
                 bot_present = True
                 developer_quantity -= 1
@@ -159,4 +159,4 @@ if __name__ == '__main__':
             print('There was an error at index {} for repo {} and pull number'.format(index, repo_name, pull_number))
             print(ex)
 
-    result.to_csv('/Users/rehmanh/Desktop/Research/Chenhao Bot Study/TEST_RQ4.csv', index=False)   
+    result.to_csv('/Users/rehmanh/Desktop/Research/Chenhao Bot Study/RQ4_Fixed.csv', index=False)

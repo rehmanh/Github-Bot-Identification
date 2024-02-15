@@ -16,9 +16,9 @@ class bot_identifier():
     def __init__(self):
         # cache size here is setted as at least 10 prs' total comments
         self.repo_comments_cache = []
-        self.CACHE_SIZE = 20
-        self.stop_words = set(["thanks", "thank", "lgtm", "you", "the"])
-        self.white_list = ["lgtm", "+1", "retest this please"]
+        self.CACHE_SIZE = 10
+        self.stop_words = set(["thanks", "thank", "lgtm", "you", "the", "agree", "good", "fine", "cc", "@microsoft-github-policy-service"])
+        self.white_list = ["lgtm", "+1", "retest this please", "agree", "good", "fine", "cc", "@microsoft-github-policy-service"]
         self.bot_df = pd.DataFrame(columns=["bot_name", "repo", "exmaple_pr", "bot_mark", "Template_identify"])
         self.outputpath = './data/results/bot_identification_result_final.csv'
 
@@ -265,15 +265,14 @@ class bot_identifier():
         
 
         ## 2. match the repo name
-        elif self.match_repo_name(repo_name, user_name) == 1:
+        if self.match_repo_name(repo_name, user_name) == 1:
             self.bot_df.loc[self.bot_df.shape[0]] = dict(zip(self.bot_df.columns, [user_name, repo_name, pr_link, "1", 0]))
-
         ## 3. match the repeat template
         elif step == 3:
+            pass 
             # print(pr_link)
-            if self.match_repeat_template(user_name, repo_name, user_comment, pr_link) == 1:
-                self.bot_df.loc[self.bot_df.shape[0]] = dict(zip(self.bot_df.columns, [user_name, repo_name, pr_link, "1", 1]))
-
+            # if self.match_repeat_template(user_name, repo_name, user_comment, pr_link) == 1:
+            #     self.bot_df.loc[self.bot_df.shape[0]] = dict(zip(self.bot_df.columns, [user_name, repo_name, pr_link, "1", 1]))
         ## 4. keep the developer accounts in the final result
         elif step == 4:
             self.bot_df.loc[self.bot_df.shape[0]] = dict(zip(self.bot_df.columns, [user_name, repo_name, pr_link, "0", 0]))
@@ -287,7 +286,7 @@ class bot_identifier():
     def setWindowSize(self, window_size):
         self.CACHE_SIZE =   window_size
 
-    def run(self, df, step=2):
+    def run(self, df, step):
 
         # self.bot_df = pd.DataFrame(columns=["user_name", "repo_name", "pr_link", "bot_level"])
         for index, row in track(df.iterrows(), description="Bot identification...", total=df.shape[0]):
@@ -309,7 +308,7 @@ if __name__ == "__main__":
     # nltk.download("wordnet")
     
     # Input File
-    df = pd.read_csv("./data/results/collected_data_one_year_microsoft_May1st-3_fixed.csv") # here is the raw dataset file path
+    df = pd.read_csv("/Users/rehmanh/Desktop/Research/Chenhao Bot Study/collected_data_one_year_microsoft_May1st-3_fixed.csv") # here is the raw dataset file path
     
     # Init the object
     bot_identification = bot_identifier()
@@ -318,7 +317,7 @@ if __name__ == "__main__":
     bot_identification.setWindowSize(10) # adjust it based on your evaluation results
 
     # Output File
-    bot_identification.setOuput("./data/results/bot_identification_MS200.csv") # modify the output path as you wish
+    bot_identification.setOuput("/Users/rehmanh/Desktop/Research/Chenhao Bot Study/experiments-data-output/9_disable_window_size_add_stop_words.csv") # modify the output path as you wish
     
     # Run the Script
     try:

@@ -6,11 +6,11 @@ import re
 from random import sample
 
 def conduct_tests():
-    df_bot = pd.read_csv('/Users/rehmanh/Desktop/Research/Chenhao Bot Study/RQ4_WithBots.csv', index_col=False)
-    df_without_bot = pd.read_csv('/Users/rehmanh/Desktop/Research/Chenhao Bot Study/RQ4_WithOutBots.csv', index_col=False)
+    df_bot = pd.read_csv('/Users/rehmanh/Desktop/Research/Chenhao Bot Study/RQ4WithBots_F.csv', index_col=False)
+    df_without_bot = pd.read_csv('/Users/rehmanh/Desktop/Research/Chenhao Bot Study/RQ4WithOutBots_F.csv', index_col=False)
 
-    comments_bot = pd.read_csv('/Users/rehmanh/Desktop/Research/Chenhao Bot Study/Comments_WithBots.csv', index_col=False)
-    comments__without_bot = pd.read_csv('/Users/rehmanh/Desktop/Research/Chenhao Bot Study/Comments_WithOutBots.csv', index_col=False)
+    comments_bot = pd.read_csv('/Users/rehmanh/Desktop/Research/Chenhao Bot Study/Comments_WithBots_F.csv', index_col=False)
+    comments__without_bot = pd.read_csv('/Users/rehmanh/Desktop/Research/Chenhao Bot Study/Comments_WithoutBots_F.csv', index_col=False)
 
     # turnaround time
     tt_bot = df_bot['Turnaround Time'].tolist()
@@ -103,7 +103,7 @@ def conduct_tests():
 
     print('\n\n\nPrinting Statistics Now:\n\n\n')
 
-    df_activity_rate = pd.read_csv('/Users/rehmanh/Desktop/Research/Chenhao Bot Study/RQ4_WithBots_ActivityRates.csv', index_col=False)
+    df_activity_rate = pd.read_csv('/Users/rehmanh/Desktop/Research/Chenhao Bot Study/RQ4WithBotsActivityRates_Fixed.csv', index_col=False)
     activity_rates = df_activity_rate['Bot Activity Rate'].tolist()
 
     stat, p_value = kstest(sample(activity_rates, 50), 'norm')
@@ -126,9 +126,9 @@ def conduct_tests():
     if len(activity_rates) > len(tt_bot):
         ar = activity_rates[0:len(tt_bot)]
 
-    corr, _ = pearsonr(tt_bot, tt_bot)
-    spear, _ = spearmanr(tt_bot, tt_bot)
-    kend, _ = kendalltau(tt_bot, tt_bot)
+    corr, _ = pearsonr(ar, tt_bot)
+    spear, _ = spearmanr(ar, tt_bot)
+    kend, _ = kendalltau(ar, tt_bot)
     print('Person Correlation for Turaround Time: %.3f' % corr)
     print('Spearman Correlation for Turnaround Time: %.3f' % spear)
     print('Kendalls Tau for Turaround Time: %.3f' % kend)
@@ -205,6 +205,8 @@ def conduct_tests():
     ar = activity_rates
     if len(activity_rates) > len(cq_bot):
         ar = activity_rates[0:len(cq_bot)]
+    else:
+        cq_bot = cq_bot[0:len(ar)]
     
     corr, _ = pearsonr(ar, cq_bot)
     spear, _ = spearmanr(ar, cq_bot)
